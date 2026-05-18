@@ -13,6 +13,8 @@ option(MATA_LAZY_BUILD_TESTS "Build mata_lazy tests" ON)
 option(MATA_LAZY_USE_SUBDIR_MATA "Build mata from a sibling source tree instead of find_package(mata)" OFF)
 option(MATA_LAZY_BUNDLE "Build fat archive (.a) and shared library (.so) with libmata embedded — for non-CMake consumers that want a single artifact to link against" OFF)
 set(MATA_LAZY_MATA_SUBDIR "../mata" CACHE PATH "Path to the mata source tree (used only when MATA_LAZY_USE_SUBDIR_MATA=ON)")
+set(MATA_LAZY_MATA_FETCH_REPO "https://github.com/tmokenc/mata.git" CACHE STRING "Git URL used by the FetchContent fallback for mata")
+set(MATA_LAZY_MATA_FETCH_TAG  "nft-per-level-alphabet"               CACHE STRING "Git ref (branch/tag/sha) for the FetchContent fallback for mata")
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -24,14 +26,30 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 endif()
 
 # -----------------------------------------------------------------------------
-# Locate libmata
+# Locate libmata. Resolution order:
+#   1. MATA_LAZY_USE_SUBDIR_MATA=ON           → add_subdirectory on a local tree
+#   2. find_package(mata) finds an install    → use it
+#   3. fall back to FetchContent (clones the configured fork+ref)
 # -----------------------------------------------------------------------------
+set(MATA_LAZY_MATA_TARGET libmata)
+
 if(MATA_LAZY_USE_SUBDIR_MATA)
     add_subdirectory(${MATA_LAZY_MATA_SUBDIR} mata_build EXCLUDE_FROM_ALL)
-    set(MATA_LAZY_MATA_TARGET libmata)
 else()
-    find_package(mata REQUIRED)
-    set(MATA_LAZY_MATA_TARGET libmata)
+    find_package(mata QUIET)
+    if(NOT mata_FOUND)
+        message(STATUS
+            "mata_lazy: libmata not found locally; fetching "
+            "${MATA_LAZY_MATA_FETCH_REPO}@${MATA_LAZY_MATA_FETCH_TAG} via FetchContent")
+        include(FetchContent)
+        FetchContent_Declare(
+            mata
+            GIT_REPOSITORY ${MATA_LAZY_MATA_FETCH_REPO}
+            GIT_TAG        ${MATA_LAZY_MATA_FETCH_TAG}
+            GIT_SHALLOW    TRUE
+        )
+        FetchContent_MakeAvailable(mata)
+    endif()
 endif()
 
 # -----------------------------------------------------------------------------

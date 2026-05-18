@@ -17,8 +17,9 @@ on:
         required: true
 
 env:
-  # Override these in the repo's Actions settings if your mata fork lives elsewhere.
-  MATA_REPO: tmokenc/mata
+  # Override these here if your mata fork lives elsewhere — they are forwarded
+  # to CMake's FetchContent fallback.
+  MATA_REPO: https://github.com/tmokenc/mata.git
   MATA_REF: nft-per-level-alphabet
 
 jobs:
@@ -28,18 +29,9 @@ jobs:
       contents: write   # needed to create the release
 
     steps:
-      - name: Checkout mata_lazy
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          path: mata_lazy
           fetch-depth: 0
-
-      - name: Checkout mata (sibling)
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ env.MATA_REPO }}
-          ref: ${{ env.MATA_REF }}
-          path: mata
 
       - name: Resolve tag
         id: tag
@@ -51,22 +43,19 @@ jobs:
           fi
 
       - name: Configure
-        working-directory: mata_lazy
         run: |
           cmake -S . -B build \
             -DCMAKE_BUILD_TYPE=Release \
             -DMATA_LAZY_BUNDLE=ON \
-            -DMATA_LAZY_USE_SUBDIR_MATA=ON \
-            -DMATA_LAZY_MATA_SUBDIR=../../mata \
+            -DMATA_LAZY_MATA_FETCH_REPO=${{ env.MATA_REPO }} \
+            -DMATA_LAZY_MATA_FETCH_TAG=${{ env.MATA_REF }} \
             -DMATA_LAZY_BUILD_EXAMPLES=OFF \
             -DMATA_LAZY_BUILD_TESTS=OFF
 
       - name: Build
-        working-directory: mata_lazy
         run: cmake --build build -j
 
       - name: Stage artifacts
-        working-directory: mata_lazy
         run: |
           TAG="${{ steps.tag.outputs.name }}"
           mkdir -p dist
@@ -87,12 +76,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: mata_lazy-${{ steps.tag.outputs.name }}
-          path: mata_lazy/dist/*
+          path: dist/*
 
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        working-directory: mata_lazy
         run: |
           TAG="${{ steps.tag.outputs.name }}"
           gh release create "$TAG" \

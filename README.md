@@ -2,6 +2,14 @@
 
 Standalone version of the lazy module (namespace `mata::nft::lazy`) implemented in [this fork of MATA](https://github.com/tmokenc/mata/tree/lazy-nft-generic-arity). Provides lazy on-the-fly emptiness checking for symbolic combinations of NFA and arbitrary-arity NFT relations.
 
+## libmata requirement
+
+mata_lazy needs the per-level-alphabet API (a different alphabet at each NFT
+level). That lives on the [`nft-per-level-alphabet`](https://github.com/tmokenc/mata/tree/nft-per-level-alphabet)
+branch of `tmokenc/mata` and is **not yet merged into upstream `VeriFIT/mata`**.
+If no local mata is provided, the CMake build clones that branch automatically
+via `FetchContent`.
+
 ## Public API
 
 One header:
