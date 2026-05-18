@@ -1,0 +1,108 @@
+name: release
+
+# Trigger: pushing a tag of the form v* (e.g. v0.1.0, v1.2.3-rc1).
+# Produces a GitHub Release with:
+#   - source tarball  (mata_lazy-<tag>-source.tar.gz)
+#   - fat static lib  (libmata_lazy_bundled.a)
+#   - fat shared lib  (libmata_lazy.so)
+#   - public header   (mata_lazy.hh)
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to release (e.g. v0.1.0)"
+        required: true
+
+env:
+  # Override these in the repo's Actions settings if your mata fork lives elsewhere.
+  MATA_REPO: tmokenc/mata
+  MATA_REF: nft-per-level-alphabet
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # needed to create the release
+
+    steps:
+      - name: Checkout mata_lazy
+        uses: actions/checkout@v4
+        with:
+          path: mata_lazy
+          fetch-depth: 0
+
+      - name: Checkout mata (sibling)
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.MATA_REPO }}
+          ref: ${{ env.MATA_REF }}
+          path: mata
+
+      - name: Resolve tag
+        id: tag
+        run: |
+          if [ -n "${{ inputs.tag }}" ]; then
+            echo "name=${{ inputs.tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "name=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Configure
+        working-directory: mata_lazy
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DMATA_LAZY_BUNDLE=ON \
+            -DMATA_LAZY_USE_SUBDIR_MATA=ON \
+            -DMATA_LAZY_MATA_SUBDIR=../../mata \
+            -DMATA_LAZY_BUILD_EXAMPLES=OFF \
+            -DMATA_LAZY_BUILD_TESTS=OFF
+
+      - name: Build
+        working-directory: mata_lazy
+        run: cmake --build build -j
+
+      - name: Stage artifacts
+        working-directory: mata_lazy
+        run: |
+          TAG="${{ steps.tag.outputs.name }}"
+          mkdir -p dist
+
+          # Rename outputs to include the tag so downloads are unambiguous.
+          cp build/libmata_lazy_bundled.a "dist/libmata_lazy_bundled-${TAG}.a"
+          cp build/libmata_lazy.so        "dist/libmata_lazy-${TAG}.so"
+          cp include/mata_lazy.hh         "dist/mata_lazy-${TAG}.hh"
+
+          # Source tarball (mata_lazy only; no submodules, no build artefacts).
+          git archive --format=tar.gz --prefix="mata_lazy-${TAG}/" \
+            -o "dist/mata_lazy-${TAG}-source.tar.gz" HEAD
+
+          (cd dist && sha256sum * > "SHA256SUMS-${TAG}.txt")
+          ls -lh dist
+
+      - name: Upload artifacts (for inspection)
+        uses: actions/upload-artifact@v4
+        with:
+          name: mata_lazy-${{ steps.tag.outputs.name }}
+          path: mata_lazy/dist/*
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        working-directory: mata_lazy
+        run: |
+          TAG="${{ steps.tag.outputs.name }}"
+          gh release create "$TAG" \
+            --title "$TAG" \
+            --notes "Built against mata @ \`${{ env.MATA_REF }}\` (${{ env.MATA_REPO }}).
+
+          **Artifacts**
+          - \`libmata_lazy_bundled-${TAG}.a\` — fat static archive. Link with \`-lpthread\`.
+          - \`libmata_lazy-${TAG}.so\` — fat shared library. Link with \`-lmata_lazy -lpthread\`.
+          - \`mata_lazy-${TAG}.hh\` — single public header.
+          - \`mata_lazy-${TAG}-source.tar.gz\` — source snapshot.
+          - \`SHA256SUMS-${TAG}.txt\` — checksums." \
+            dist/*
