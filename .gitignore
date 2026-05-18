@@ -1,0 +1,15 @@
+build/
+build-*/
+*.o
+*.a
+*.so
+*.so.*
+.cache/
+compile_commands.json
+
+# editors
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store

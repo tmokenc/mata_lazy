@@ -1,0 +1,7 @@
+file(GLOB MATA_LAZY_EXAMPLES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.cc")
+
+foreach(MATA_LAZY_EXAMPLE ${MATA_LAZY_EXAMPLES})
+    get_filename_component(MATA_LAZY_EXAMPLE_NAME ${MATA_LAZY_EXAMPLE} NAME_WE)
+    add_executable(${MATA_LAZY_EXAMPLE_NAME} ${MATA_LAZY_EXAMPLE})
+    target_link_libraries(${MATA_LAZY_EXAMPLE_NAME} PRIVATE mata_lazy)
+endforeach()
