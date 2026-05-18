@@ -1,11 +1,6 @@
 # mata_lazy
 
-Standalone version of the `lazy-nft-generic-arity` lazy module from
-[mata](https://github.com/VeriFIT/mata). Provides lazy on-the-fly emptiness
-checking for symbolic combinations of NFA and arbitrary-arity NFT relations.
-
-The module originally lived under `src/nft/lazy/` in mata; this repo pulls it
-out so it can evolve on its own.
+Standalone version of the lazy module (namespace `mata::nft::lazy`) implemented in [this fork of MATA](https://github.com/tmokenc/mata/tree/lazy-nft-generic-arity). Provides lazy on-the-fly emptiness checking for symbolic combinations of NFA and arbitrary-arity NFT relations.
 
 ## Public API
 
