@@ -1,6 +1,6 @@
 /**
  * @file macrostate_store.hh
- * @brief Private macrostate storage declarations for mata::nft::lazy::detail.
+ * @brief Private macrostate storage declarations for mata_lazy::detail.
  */
 
 #pragma once
@@ -17,7 +17,7 @@
 #include <unordered_map>
 #include <vector>
 
-namespace mata::nft::lazy::detail {
+namespace mata_lazy::detail {
 
 /**
  * @brief Interning storage for reconstructed lazy macrostates.
@@ -100,4 +100,4 @@ struct MacroStateStore {
     MacroStateId intern(const NodeId idx, const TaggedState& tagged);
 };
 
-} // namespace mata::nft::lazy::detail
+} // namespace mata_lazy::detail

@@ -1,5 +1,5 @@
 /** @file
- * @brief Semantic tests for mata::nft::lazy.
+ * @brief Semantic tests for mata_lazy.
  *
  * Most tests derive alphabets entirely from the transition delta:
  *  - create_alphabet(nfa)            walks nfa.delta for NFA leaf nodes
@@ -32,7 +32,7 @@
 
 using namespace mata;
 using namespace mata::nft;
-using namespace mata::nft::lazy;
+using namespace mata_lazy;
 
 namespace {
 
@@ -228,22 +228,22 @@ AlphabetLevels g_int_alphabets{ &g_int_alphabet };
 // 1. Leaf NFA emptiness
 // ---------------------------------------------------------------------------
 
-TEST_CASE("mata::nft::lazy – leaf NFA: empty language") {
+TEST_CASE("mata_lazy – leaf NFA: empty language") {
     SymbolicFormula tree;
     CHECK(tree.is_empty(tree.make_term(empty_nfa())));
 }
 
-TEST_CASE("mata::nft::lazy – leaf NFA: epsilon language is not empty") {
+TEST_CASE("mata_lazy – leaf NFA: epsilon language is not empty") {
     SymbolicFormula tree;
     CHECK_FALSE(tree.is_empty(tree.make_term(epsilon_nfa())));
 }
 
-TEST_CASE("mata::nft::lazy – leaf NFA: single-symbol language is not empty") {
+TEST_CASE("mata_lazy – leaf NFA: single-symbol language is not empty") {
     SymbolicFormula tree;
     CHECK_FALSE(tree.is_empty(tree.make_term(single_symbol_nfa('a'))));
 }
 
-TEST_CASE("mata::nft::lazy – leaf NFA: one live initial state is enough") {
+TEST_CASE("mata_lazy – leaf NFA: one live initial state is enough") {
     SymbolicFormula tree;
     CHECK_FALSE(tree.is_empty(tree.make_term(two_initials_one_live_nfa('a'))));
 }
@@ -252,27 +252,27 @@ TEST_CASE("mata::nft::lazy – leaf NFA: one live initial state is enough") {
 // 2. Leaf NFT emptiness
 // ---------------------------------------------------------------------------
 
-TEST_CASE("mata::nft::lazy – leaf NFT: singleton relation is not empty") {
+TEST_CASE("mata_lazy – leaf NFT: singleton relation is not empty") {
     SymbolicFormula tree;
     CHECK_FALSE(tree.is_empty(tree.make_term(relation_single_pair('a', 'b'))));
 }
 
-TEST_CASE("mata::nft::lazy – leaf NFT: looping relation is not empty") {
+TEST_CASE("mata_lazy – leaf NFT: looping relation is not empty") {
     SymbolicFormula tree;
     CHECK_FALSE(tree.is_empty(tree.make_term(universal_pair_loop('a', 'b'))));
 }
 
-TEST_CASE("mata::nft::lazy – leaf NFT: empty transducer is empty") {
+TEST_CASE("mata_lazy – leaf NFT: empty transducer is empty") {
     SymbolicFormula tree;
     CHECK(tree.is_empty(tree.make_term(empty_nft('a', 'b'))));
 }
 
-TEST_CASE("mata::nft::lazy – leaf NFT: one live initial state is enough") {
+TEST_CASE("mata_lazy – leaf NFT: one live initial state is enough") {
     SymbolicFormula tree;
     CHECK_FALSE(tree.is_empty(tree.make_term(two_initials_one_live_nft('a', 'b'))));
 }
 
-TEST_CASE("mata::nft::lazy – leaf NFT: arity-3 singleton relation is not empty") {
+TEST_CASE("mata_lazy – leaf NFT: arity-3 singleton relation is not empty") {
     SymbolicFormula tree;
     const Term triple = tree.make_term(relation_single_triple('a', 'b', 'c'));
     CHECK(tree.arity_of(triple) == 3);
@@ -283,14 +283,14 @@ TEST_CASE("mata::nft::lazy – leaf NFT: arity-3 singleton relation is not empty
 // 3. Boolean NFA combinations
 // ---------------------------------------------------------------------------
 
-TEST_CASE("mata::nft::lazy – union of two disjoint non-empty languages is not empty") {
+TEST_CASE("mata_lazy – union of two disjoint non-empty languages is not empty") {
     SymbolicFormula tree;
     const Term a = tree.make_term(single_symbol_nfa('a'));
     const Term b = tree.make_term(single_symbol_nfa('b'));
     CHECK_FALSE(tree.is_empty(tree.unite(a, b)));
 }
 
-TEST_CASE("mata::nft::lazy – union with empty is identity") {
+TEST_CASE("mata_lazy – union with empty is identity") {
     SymbolicFormula tree;
     const Term a = tree.make_term(single_symbol_nfa('a'));
     const Term empty = tree.make_term(empty_nfa());
@@ -298,48 +298,48 @@ TEST_CASE("mata::nft::lazy – union with empty is identity") {
     CHECK_FALSE(tree.is_empty(tree.unite(empty, a)));
 }
 
-TEST_CASE("mata::nft::lazy – union of two empty languages is empty") {
+TEST_CASE("mata_lazy – union of two empty languages is empty") {
     SymbolicFormula tree;
     const Term e1 = tree.make_term(empty_nfa());
     const Term e2 = tree.make_term(empty_nfa());
     CHECK(tree.is_empty(tree.unite(e1, e2)));
 }
 
-TEST_CASE("mata::nft::lazy – intersection of disjoint languages is empty") {
+TEST_CASE("mata_lazy – intersection of disjoint languages is empty") {
     SymbolicFormula tree;
     const Term a = tree.make_term(single_symbol_nfa('a'));
     const Term b = tree.make_term(single_symbol_nfa('b'));
     CHECK(tree.is_empty(tree.intersect(a, b)));
 }
 
-TEST_CASE("mata::nft::lazy – intersection of a language with itself is not empty") {
+TEST_CASE("mata_lazy – intersection of a language with itself is not empty") {
     SymbolicFormula tree;
     const Term a = tree.make_term(single_symbol_nfa('a'));
     CHECK_FALSE(tree.is_empty(tree.intersect(a, a)));
 }
 
-TEST_CASE("mata::nft::lazy – intersection normalizes shared string symbols across local encodings") {
+TEST_CASE("mata_lazy – intersection normalizes shared string symbols across local encodings") {
     SymbolicFormula tree;
     const Term lhs = tree.make_term(single_named_symbol_nfa("x", 3));
     const Term rhs = tree.make_term(single_named_symbol_nfa("x", 17));
     CHECK_FALSE(tree.is_empty(tree.intersect(lhs, rhs)));
 }
 
-TEST_CASE("mata::nft::lazy – intersection of single-symbol word with epsilon is empty") {
+TEST_CASE("mata_lazy – intersection of single-symbol word with epsilon is empty") {
     SymbolicFormula tree;
     const Term a = tree.make_term(single_symbol_nfa('a'));
     const Term eps = tree.make_term(epsilon_nfa());
     CHECK(tree.is_empty(tree.intersect(a, eps)));
 }
 
-TEST_CASE("mata::nft::lazy – intersection with empty language is empty") {
+TEST_CASE("mata_lazy – intersection with empty language is empty") {
     SymbolicFormula tree;
     const Term a = tree.make_term(single_symbol_nfa('a'));
     const Term empty = tree.make_term(empty_nfa());
     CHECK(tree.is_empty(tree.intersect(a, empty)));
 }
 
-TEST_CASE("mata::nft::lazy – NFT intersection treats DONT_CARE as a wildcard") {
+TEST_CASE("mata_lazy – NFT intersection treats DONT_CARE as a wildcard") {
     SymbolicFormula tree;
     const Term wildcard = tree.make_term(relation_single_pair(DONT_CARE, 'b'));
     const Term concrete = tree.make_term(relation_single_pair('a', 'b'));
@@ -351,24 +351,24 @@ TEST_CASE("mata::nft::lazy – NFT intersection treats DONT_CARE as a wildcard")
 // 4. Complement – basic, roundtrip, and De Morgan
 // ---------------------------------------------------------------------------
 
-TEST_CASE("mata::nft::lazy – complement of empty language is not empty") {
+TEST_CASE("mata_lazy – complement of empty language is not empty") {
     SymbolicFormula tree;
     // complement of ∅ must contain at least ε (the empty macro-set is accepting).
     CHECK_FALSE(tree.is_empty(tree.complement(tree.make_term(empty_nfa()))));
 }
 
-TEST_CASE("mata::nft::lazy – complement of single-symbol language is not empty") {
+TEST_CASE("mata_lazy – complement of single-symbol language is not empty") {
     // {a} is not universal over {a}*, so its complement contains other words.
     SymbolicFormula tree;
     CHECK_FALSE(tree.is_empty(tree.complement(tree.make_term(single_symbol_nfa('a')))));
 }
 
-TEST_CASE("mata::nft::lazy – complement of universal language is empty") {
+TEST_CASE("mata_lazy – complement of universal language is empty") {
     SymbolicFormula tree;
     CHECK(tree.is_empty(tree.complement(tree.make_term(universal_nfa('a')))));
 }
 
-TEST_CASE("mata::nft::lazy – explicit alphabet widens complement of universal NFA") {
+TEST_CASE("mata_lazy – explicit alphabet widens complement of universal NFA") {
     SymbolicFormula tree;
     OnTheFlyAlphabet alphabet{};
     alphabet.add_new_symbol("a", 'a');
@@ -377,19 +377,19 @@ TEST_CASE("mata::nft::lazy – explicit alphabet widens complement of universal 
     CHECK_FALSE(tree.is_empty(tree.complement(tree.make_term(universal_nfa('a'))), alphabet));
 }
 
-TEST_CASE("mata::nft::lazy – double complement of non-empty language is not empty") {
+TEST_CASE("mata_lazy – double complement of non-empty language is not empty") {
     SymbolicFormula tree;
     const Term a = tree.make_term(single_symbol_nfa('a'));
     CHECK_FALSE(tree.is_empty(tree.complement(tree.complement(a))));
 }
 
-TEST_CASE("mata::nft::lazy – double complement of empty language is empty") {
+TEST_CASE("mata_lazy – double complement of empty language is empty") {
     SymbolicFormula tree;
     const Term e = tree.make_term(empty_nfa());
     CHECK(tree.is_empty(tree.complement(tree.complement(e))));
 }
 
-TEST_CASE("mata::nft::lazy – De Morgan: complement(union) and intersect(complements) agree") {
+TEST_CASE("mata_lazy – De Morgan: complement(union) and intersect(complements) agree") {
     SymbolicFormula tree;
     const Term a = tree.make_term(single_symbol_nfa('a'));
     const Term eps = tree.make_term(epsilon_nfa());
@@ -398,7 +398,7 @@ TEST_CASE("mata::nft::lazy – De Morgan: complement(union) and intersect(comple
     CHECK(tree.is_empty(lhs) == tree.is_empty(rhs));
 }
 
-TEST_CASE("mata::nft::lazy – De Morgan: complement(intersect) and union(complements) agree") {
+TEST_CASE("mata_lazy – De Morgan: complement(intersect) and union(complements) agree") {
     SymbolicFormula tree;
     const Term a = tree.make_term(single_symbol_nfa('a'));
     const Term b = tree.make_term(single_symbol_nfa('b'));
@@ -413,56 +413,56 @@ TEST_CASE("mata::nft::lazy – De Morgan: complement(intersect) and union(comple
 // 5. Pre-image and post-image on singleton relations
 // ---------------------------------------------------------------------------
 
-TEST_CASE("mata::nft::lazy – post-image of matching input is not empty") {
+TEST_CASE("mata_lazy – post-image of matching input is not empty") {
     SymbolicFormula tree;
     const Term lang_a = tree.make_term(single_symbol_nfa('a'));
     const Term rel_a_to_b = tree.make_term(relation_single_pair('a', 'b'));
     CHECK_FALSE(tree.is_empty(tree.post_image(lang_a, rel_a_to_b)));
 }
 
-TEST_CASE("mata::nft::lazy – post-image of non-matching input is empty") {
+TEST_CASE("mata_lazy – post-image of non-matching input is empty") {
     SymbolicFormula tree;
     const Term lang_b = tree.make_term(single_symbol_nfa('b'));
     const Term rel_a_to_b = tree.make_term(relation_single_pair('a', 'b'));
     CHECK(tree.is_empty(tree.post_image(lang_b, rel_a_to_b)));
 }
 
-TEST_CASE("mata::nft::lazy – post-image of empty language is empty") {
+TEST_CASE("mata_lazy – post-image of empty language is empty") {
     SymbolicFormula tree;
     const Term empty = tree.make_term(empty_nfa());
     const Term rel_a_to_b = tree.make_term(relation_single_pair('a', 'b'));
     CHECK(tree.is_empty(tree.post_image(empty, rel_a_to_b)));
 }
 
-TEST_CASE("mata::nft::lazy – pre-image of matching output is not empty") {
+TEST_CASE("mata_lazy – pre-image of matching output is not empty") {
     SymbolicFormula tree;
     const Term lang_b = tree.make_term(single_symbol_nfa('b'));
     const Term rel_a_to_b = tree.make_term(relation_single_pair('a', 'b'));
     CHECK_FALSE(tree.is_empty(tree.pre_image(lang_b, rel_a_to_b)));
 }
 
-TEST_CASE("mata::nft::lazy – pre-image of non-matching output is empty") {
+TEST_CASE("mata_lazy – pre-image of non-matching output is empty") {
     SymbolicFormula tree;
     const Term lang_a = tree.make_term(single_symbol_nfa('a'));
     const Term rel_a_to_b = tree.make_term(relation_single_pair('a', 'b'));
     CHECK(tree.is_empty(tree.pre_image(lang_a, rel_a_to_b)));
 }
 
-TEST_CASE("mata::nft::lazy – pre-image direction: rel b->a, pre-image of {a} is non-empty") {
+TEST_CASE("mata_lazy – pre-image direction: rel b->a, pre-image of {a} is non-empty") {
     SymbolicFormula tree;
     const Term lang_a = tree.make_term(single_symbol_nfa('a'));
     const Term rel_b_to_a = tree.make_term(relation_single_pair('b', 'a'));
     CHECK_FALSE(tree.is_empty(tree.pre_image(lang_a, rel_b_to_a)));
 }
 
-TEST_CASE("mata::nft::lazy – pre-image of empty language is empty") {
+TEST_CASE("mata_lazy – pre-image of empty language is empty") {
     SymbolicFormula tree;
     const Term empty = tree.make_term(empty_nfa());
     const Term rel_a_to_b = tree.make_term(relation_single_pair('a', 'b'));
     CHECK(tree.is_empty(tree.pre_image(empty, rel_a_to_b)));
 }
 
-TEST_CASE("mata::nft::lazy – post-image normalizes named symbols across local encodings") {
+TEST_CASE("mata_lazy – post-image normalizes named symbols across local encodings") {
     SymbolicFormula tree;
     const Term lang_in = tree.make_term(single_named_symbol_nfa("in", 5));
     const Term lang_out = tree.make_term(single_named_symbol_nfa("out", 41));
@@ -473,7 +473,7 @@ TEST_CASE("mata::nft::lazy – post-image normalizes named symbols across local 
     CHECK_FALSE(tree.is_empty(tree.intersect(post, lang_out)));
 }
 
-TEST_CASE("mata::nft::lazy – post-image respects genuinely separate per-tape alphabets") {
+TEST_CASE("mata_lazy – post-image respects genuinely separate per-tape alphabets") {
     SymbolicFormula tree;
     const Term lang_in = tree.make_term(single_named_symbol_nfa("src", 5));
     const Term lang_out = tree.make_term(single_named_symbol_nfa("dst", 11));
@@ -484,7 +484,7 @@ TEST_CASE("mata::nft::lazy – post-image respects genuinely separate per-tape a
     CHECK_FALSE(tree.is_empty(tree.intersect(post, lang_out)));
 }
 
-TEST_CASE("mata::nft::lazy – pre-image normalizes named symbols across local encodings") {
+TEST_CASE("mata_lazy – pre-image normalizes named symbols across local encodings") {
     SymbolicFormula tree;
     const Term lang_out = tree.make_term(single_named_symbol_nfa("out", 7));
     const Term lang_in = tree.make_term(single_named_symbol_nfa("in", 50));
@@ -495,14 +495,14 @@ TEST_CASE("mata::nft::lazy – pre-image normalizes named symbols across local e
     CHECK_FALSE(tree.is_empty(tree.intersect(pre, lang_in)));
 }
 
-TEST_CASE("mata::nft::lazy – post-image through empty transducer is empty") {
+TEST_CASE("mata_lazy – post-image through empty transducer is empty") {
     SymbolicFormula tree;
     const Term lang_a = tree.make_term(single_symbol_nfa('a'));
     const Term empty_rel = tree.make_term(empty_nft('a', 'b'));
     CHECK(tree.is_empty(tree.post_image(lang_a, empty_rel)));
 }
 
-TEST_CASE("mata::nft::lazy – pre-image through empty transducer is empty") {
+TEST_CASE("mata_lazy – pre-image through empty transducer is empty") {
     SymbolicFormula tree;
     const Term lang_b = tree.make_term(single_symbol_nfa('b'));
     const Term empty_rel = tree.make_term(empty_nft('a', 'b'));
@@ -513,28 +513,28 @@ TEST_CASE("mata::nft::lazy – pre-image through empty transducer is empty") {
 // 6. Pre-image / post-image with epsilon input
 // ---------------------------------------------------------------------------
 
-TEST_CASE("mata::nft::lazy – post-image of epsilon through length-1 relation is empty") {
+TEST_CASE("mata_lazy – post-image of epsilon through length-1 relation is empty") {
     SymbolicFormula tree;
     const Term eps = tree.make_term(epsilon_nfa());
     const Term rel_a_to_b = tree.make_term(relation_single_pair('a', 'b'));
     CHECK(tree.is_empty(tree.post_image(eps, rel_a_to_b)));
 }
 
-TEST_CASE("mata::nft::lazy – pre-image of epsilon through length-1 relation is empty") {
+TEST_CASE("mata_lazy – pre-image of epsilon through length-1 relation is empty") {
     SymbolicFormula tree;
     const Term eps = tree.make_term(epsilon_nfa());
     const Term rel_a_to_b = tree.make_term(relation_single_pair('a', 'b'));
     CHECK(tree.is_empty(tree.pre_image(eps, rel_a_to_b)));
 }
 
-TEST_CASE("mata::nft::lazy – post-image of epsilon through epsilon-preserving loop is not empty") {
+TEST_CASE("mata_lazy – post-image of epsilon through epsilon-preserving loop is not empty") {
     SymbolicFormula tree;
     const Term eps = tree.make_term(epsilon_nfa());
     const Term rel = tree.make_term(universal_pair_loop('a', 'b'));
     CHECK_FALSE(tree.is_empty(tree.post_image(eps, rel)));
 }
 
-TEST_CASE("mata::nft::lazy – pre-image of epsilon through epsilon-preserving loop is not empty") {
+TEST_CASE("mata_lazy – pre-image of epsilon through epsilon-preserving loop is not empty") {
     SymbolicFormula tree;
     const Term eps = tree.make_term(epsilon_nfa());
     const Term rel = tree.make_term(universal_pair_loop('a', 'b'));
@@ -545,7 +545,7 @@ TEST_CASE("mata::nft::lazy – pre-image of epsilon through epsilon-preserving l
 // 7. Level-specific alphabet isolation
 // ---------------------------------------------------------------------------
 
-TEST_CASE("mata::nft::lazy – post-image uses only the output alphabet") {
+TEST_CASE("mata_lazy – post-image uses only the output alphabet") {
     // rel maps a* -> b*.  post-image of a* is b*.
     // complement within output alphabet {b} must be empty.
     SymbolicFormula tree;
@@ -556,7 +556,7 @@ TEST_CASE("mata::nft::lazy – post-image uses only the output alphabet") {
     CHECK(tree.is_empty(tree.complement(post)));
 }
 
-TEST_CASE("mata::nft::lazy – pre-image uses only the input alphabet") {
+TEST_CASE("mata_lazy – pre-image uses only the input alphabet") {
     // rel maps a* -> b*.  pre-image of b* is a*.
     // complement within input alphabet {a} must be empty.
     SymbolicFormula tree;
@@ -567,7 +567,7 @@ TEST_CASE("mata::nft::lazy – pre-image uses only the input alphabet") {
     CHECK(tree.is_empty(tree.complement(pre)));
 }
 
-TEST_CASE("mata::nft::lazy – post-image result does not contain input symbols") {
+TEST_CASE("mata_lazy – post-image result does not contain input symbols") {
     // post-image of a* through rel (a->b) lives in alphabet {b}.
     // Intersecting with {a} (input-alphabet language) must be empty.
     SymbolicFormula tree;
@@ -582,14 +582,14 @@ TEST_CASE("mata::nft::lazy – post-image result does not contain input symbols"
 // 8. NFT relation complement
 // ---------------------------------------------------------------------------
 
-TEST_CASE("mata::nft::lazy – complement of universal NFT relation is empty") {
+TEST_CASE("mata_lazy – complement of universal NFT relation is empty") {
     SymbolicFormula tree;
     const Term univ = tree.make_term(universal_pair_loop('a', 'b'));
     CHECK_FALSE(tree.is_empty(univ));
     CHECK(tree.is_empty(tree.complement(univ)));
 }
 
-TEST_CASE("mata::nft::lazy – explicit alphabet widens complement of universal NFT relation") {
+TEST_CASE("mata_lazy – explicit alphabet widens complement of universal NFT relation") {
     SymbolicFormula tree;
     const Term univ = tree.make_term(universal_pair_loop('a', 'b'));
 
@@ -601,7 +601,7 @@ TEST_CASE("mata::nft::lazy – explicit alphabet widens complement of universal 
     CHECK_FALSE(tree.is_empty(tree.complement(univ), alphabet));
 }
 
-TEST_CASE("mata::nft::lazy – explicit per-level alphabets define complement universe tape-wise") {
+TEST_CASE("mata_lazy – explicit per-level alphabets define complement universe tape-wise") {
     SymbolicFormula tree;
     const Term univ = tree.make_term(universal_named_pair_loop_per_tape("in", 7, "out", 13));
 
@@ -614,19 +614,19 @@ TEST_CASE("mata::nft::lazy – explicit per-level alphabets define complement un
     CHECK_FALSE(tree.is_empty(tree.complement(univ), level_alphabets));
 }
 
-TEST_CASE("mata::nft::lazy – double complement of non-empty NFT relation is not empty") {
+TEST_CASE("mata_lazy – double complement of non-empty NFT relation is not empty") {
     SymbolicFormula tree;
     const Term rel = tree.make_term(relation_single_pair('a', 'b'));
     CHECK_FALSE(tree.is_empty(tree.complement(tree.complement(rel))));
 }
 
-TEST_CASE("mata::nft::lazy – complement of empty NFT relation is not empty") {
+TEST_CASE("mata_lazy – complement of empty NFT relation is not empty") {
     SymbolicFormula tree;
     const Term rel = tree.make_term(empty_nft('a', 'b'));
     CHECK_FALSE(tree.is_empty(tree.complement(rel)));
 }
 
-TEST_CASE("mata::nft::lazy – double complement of empty NFT relation is empty") {
+TEST_CASE("mata_lazy – double complement of empty NFT relation is empty") {
     SymbolicFormula tree;
     const Term rel = tree.make_term(empty_nft('a', 'b'));
     CHECK(tree.is_empty(tree.complement(tree.complement(rel))));
@@ -636,7 +636,7 @@ TEST_CASE("mata::nft::lazy – double complement of empty NFT relation is empty"
 // 9. Composition
 // ---------------------------------------------------------------------------
 
-TEST_CASE("mata::nft::lazy – composition chains two singleton relations correctly") {
+TEST_CASE("mata_lazy – composition chains two singleton relations correctly") {
     // ab ∘ bc = ac
     SymbolicFormula tree;
     const Term lang_a = tree.make_term(single_symbol_nfa('a'));
@@ -650,7 +650,7 @@ TEST_CASE("mata::nft::lazy – composition chains two singleton relations correc
     CHECK(tree.is_empty(tree.pre_image(lang_a, ac))); // a not an output of ac
 }
 
-TEST_CASE("mata::nft::lazy – composition with mismatched sync symbol is empty") {
+TEST_CASE("mata_lazy – composition with mismatched sync symbol is empty") {
     // ab maps a->b, cd maps c->d; sync alphabet (b ∩ c) is empty.
     SymbolicFormula tree;
     const Term lang_a = tree.make_term(single_symbol_nfa('a'));
@@ -661,7 +661,7 @@ TEST_CASE("mata::nft::lazy – composition with mismatched sync symbol is empty"
     CHECK(tree.is_empty(tree.post_image(lang_a, comp)));
 }
 
-TEST_CASE("mata::nft::lazy – composition is not commutative") {
+TEST_CASE("mata_lazy – composition is not commutative") {
     SymbolicFormula tree;
     const Term lang_a = tree.make_term(single_symbol_nfa('a'));
     const Term ab = tree.make_term(relation_single_pair('a', 'b'));
@@ -672,7 +672,7 @@ TEST_CASE("mata::nft::lazy – composition is not commutative") {
     CHECK(tree.is_empty(tree.post_image(lang_a, bc_then_ab)));
 }
 
-TEST_CASE("mata::nft::lazy – composition normalizes named sync symbols across local encodings") {
+TEST_CASE("mata_lazy – composition normalizes named sync symbols across local encodings") {
     SymbolicFormula tree;
     const Term lang_src = tree.make_term(single_named_symbol_nfa("src", 101));
     const Term lang_dst = tree.make_term(single_named_symbol_nfa("dst", 205));
@@ -686,7 +686,7 @@ TEST_CASE("mata::nft::lazy – composition normalizes named sync symbols across 
     CHECK_FALSE(tree.is_empty(tree.intersect(tree.pre_image(lang_dst, composed), lang_src)));
 }
 
-TEST_CASE("mata::nft::lazy – composition matches DONT_CARE on synchronized levels") {
+TEST_CASE("mata_lazy – composition matches DONT_CARE on synchronized levels") {
     SymbolicFormula tree;
     const Term lang_a = tree.make_term(single_symbol_nfa('a'));
     const Term lang_c = tree.make_term(single_symbol_nfa('c'));
@@ -699,7 +699,7 @@ TEST_CASE("mata::nft::lazy – composition matches DONT_CARE on synchronized lev
     CHECK_FALSE(tree.is_empty(tree.intersect(tree.post_image(lang_a, composed), lang_c)));
 }
 
-TEST_CASE("mata::nft::lazy – identity maps a language to the diagonal relation") {
+TEST_CASE("mata_lazy – identity maps a language to the diagonal relation") {
     SymbolicFormula tree;
     const Term lang_a = tree.make_term(single_symbol_nfa('a'));
     const Term lang_b = tree.make_term(single_symbol_nfa('b'));
@@ -710,7 +710,7 @@ TEST_CASE("mata::nft::lazy – identity maps a language to the diagonal relation
     CHECK(tree.is_empty(tree.post_image(lang_b, diag)));
 }
 
-TEST_CASE("mata::nft::lazy – identity of epsilon language contains the epsilon pair") {
+TEST_CASE("mata_lazy – identity of epsilon language contains the epsilon pair") {
     SymbolicFormula tree;
     const Term eps = tree.make_term(epsilon_nfa());
     const Term diag = tree.identity(eps);
@@ -720,7 +720,7 @@ TEST_CASE("mata::nft::lazy – identity of epsilon language contains the epsilon
     CHECK_FALSE(tree.is_empty(tree.pre_image(eps, diag)));
 }
 
-TEST_CASE("mata::nft::lazy – identity forces the same alphabet on both result tapes") {
+TEST_CASE("mata_lazy – identity forces the same alphabet on both result tapes") {
     SymbolicFormula tree;
     const Term lang_x = tree.make_term(single_named_symbol_nfa("x", 3));
     const Term diag = tree.identity(lang_x);
@@ -732,7 +732,7 @@ TEST_CASE("mata::nft::lazy – identity forces the same alphabet on both result 
     CHECK_FALSE(tree.is_empty(diag, level_alphabets));
 }
 
-TEST_CASE("mata::nft::lazy – project can drop inner levels from a higher-arity relation") {
+TEST_CASE("mata_lazy – project can drop inner levels from a higher-arity relation") {
     SymbolicFormula tree;
     const Term triple = tree.make_term(relation_single_triple('a', 'b', 'c'));
     const Term projected = tree.project(triple, {0, 2});
@@ -745,7 +745,7 @@ TEST_CASE("mata::nft::lazy – project can drop inner levels from a higher-arity
     CHECK_FALSE(tree.is_empty(tree.sync_product(lang_c, projected, {0}, {1}, {LevelRef{LevelRef::Side::Rhs, 0}})));
 }
 
-TEST_CASE("mata::nft::lazy – project is existential over removed coordinates") {
+TEST_CASE("mata_lazy – project is existential over removed coordinates") {
     SymbolicFormula tree;
     const Term left = tree.make_term(relation_single_triple('a', 'b', 'c'));
     const Term right = tree.make_term(relation_single_triple('a', 'x', 'c'));
@@ -759,7 +759,7 @@ TEST_CASE("mata::nft::lazy – project is existential over removed coordinates")
     CHECK(tree.is_empty(tree.intersect(projected, unexpected)));
 }
 
-TEST_CASE("mata::nft::lazy – project can produce a non-empty zero-arity relation") {
+TEST_CASE("mata_lazy – project can produce a non-empty zero-arity relation") {
     SymbolicFormula tree;
     const Term triple = tree.make_term(relation_single_triple('a', 'b', 'c'));
     const Term projected = tree.project(triple, {});
@@ -768,7 +768,7 @@ TEST_CASE("mata::nft::lazy – project can produce a non-empty zero-arity relati
     CHECK_FALSE(tree.is_empty(projected));
 }
 
-TEST_CASE("mata::nft::lazy – project of an empty relation to zero arity stays empty") {
+TEST_CASE("mata_lazy – project of an empty relation to zero arity stays empty") {
     SymbolicFormula tree;
     const Term rel = tree.make_term(empty_nft('a', 'b'));
     const Term projected = tree.project(rel, {});
@@ -777,7 +777,7 @@ TEST_CASE("mata::nft::lazy – project of an empty relation to zero arity stays 
     CHECK(tree.is_empty(projected));
 }
 
-TEST_CASE("mata::nft::lazy – generic compose on arity-3 relations keeps non-synchronized tracks") {
+TEST_CASE("mata_lazy – generic compose on arity-3 relations keeps non-synchronized tracks") {
     SymbolicFormula tree;
     const Term left = tree.make_term(relation_single_triple('a', 'b', 'x'));
     const Term right = tree.make_term(relation_single_triple('x', 'c', 'd'));
@@ -787,7 +787,7 @@ TEST_CASE("mata::nft::lazy – generic compose on arity-3 relations keeps non-sy
     CHECK_FALSE(tree.is_empty(composed));
 }
 
-TEST_CASE("mata::nft::lazy – sync_product can collapse completely to a zero-arity witness") {
+TEST_CASE("mata_lazy – sync_product can collapse completely to a zero-arity witness") {
     SymbolicFormula tree;
     const Term lhs = tree.make_term(single_symbol_nfa('a'));
     const Term rhs = tree.make_term(single_symbol_nfa('a'));
@@ -797,7 +797,7 @@ TEST_CASE("mata::nft::lazy – sync_product can collapse completely to a zero-ar
     CHECK_FALSE(tree.is_empty(synced));
 }
 
-TEST_CASE("mata::nft::lazy – zero-arity sync_product is empty when synchronized labels do not match") {
+TEST_CASE("mata_lazy – zero-arity sync_product is empty when synchronized labels do not match") {
     SymbolicFormula tree;
     const Term lhs = tree.make_term(single_symbol_nfa('a'));
     const Term rhs = tree.make_term(single_symbol_nfa('b'));
@@ -807,7 +807,7 @@ TEST_CASE("mata::nft::lazy – zero-arity sync_product is empty when synchronize
     CHECK(tree.is_empty(synced));
 }
 
-TEST_CASE("mata::nft::lazy – sync_product keeps the concrete synchronized label when matched through DONT_CARE") {
+TEST_CASE("mata_lazy – sync_product keeps the concrete synchronized label when matched through DONT_CARE") {
     SymbolicFormula tree;
     const Term left = tree.make_term(relation_single_pair('a', DONT_CARE));
     const Term right = tree.make_term(relation_single_pair('b', 'c'));
@@ -830,7 +830,7 @@ TEST_CASE("mata::nft::lazy – sync_product keeps the concrete synchronized labe
 // 10. DAG sharing
 // ---------------------------------------------------------------------------
 
-TEST_CASE("mata::nft::lazy – shared subterm is evaluated correctly") {
+TEST_CASE("mata_lazy – shared subterm is evaluated correctly") {
     // intersect(union(a, a), union(a, a)) — the union node is shared.
     SymbolicFormula tree;
     const Term a = tree.make_term(single_symbol_nfa('a'));
@@ -840,7 +840,7 @@ TEST_CASE("mata::nft::lazy – shared subterm is evaluated correctly") {
     CHECK_FALSE(tree.is_empty(root));
 }
 
-TEST_CASE("mata::nft::lazy – complement of shared subterm under intersect is not empty") {
+TEST_CASE("mata_lazy – complement of shared subterm under intersect is not empty") {
     // intersect(comp(shared), comp(shared)) — both arms reference the same
     // complement node.  Targets the memoised reconstruction path in v2 and
     // verifies no false cycle error is thrown.
@@ -863,7 +863,7 @@ TEST_CASE("mata::nft::lazy – complement of shared subterm under intersect is n
 // rewritten formulas still produce the correct emptiness answer.
 // ---------------------------------------------------------------------------
 
-TEST_CASE("mata::nft::lazy – union of a language with itself matches the operand emptiness") {
+TEST_CASE("mata_lazy – union of a language with itself matches the operand emptiness") {
     SymbolicFormula tree;
     const Term a = tree.make_term(single_symbol_nfa('a'));
     const Term empty = tree.make_term(empty_nfa());
@@ -872,7 +872,7 @@ TEST_CASE("mata::nft::lazy – union of a language with itself matches the opera
     CHECK(tree.is_empty(tree.unite(empty, empty)));
 }
 
-TEST_CASE("mata::nft::lazy – intersect of a language with itself matches the operand emptiness") {
+TEST_CASE("mata_lazy – intersect of a language with itself matches the operand emptiness") {
     SymbolicFormula tree;
     const Term a = tree.make_term(single_symbol_nfa('a'));
     const Term empty = tree.make_term(empty_nfa());
@@ -881,7 +881,7 @@ TEST_CASE("mata::nft::lazy – intersect of a language with itself matches the o
     CHECK(tree.is_empty(tree.intersect(empty, empty)));
 }
 
-TEST_CASE("mata::nft::lazy – complement of self-union is the complement of the operand") {
+TEST_CASE("mata_lazy – complement of self-union is the complement of the operand") {
     // complement(a ∪ a) ≡ complement(a), over alphabet {a} this is empty
     // because the only word, `a`, lies in the operand.
     SymbolicFormula tree;
@@ -889,14 +889,14 @@ TEST_CASE("mata::nft::lazy – complement of self-union is the complement of the
     CHECK(tree.is_empty(tree.complement(tree.unite(a, a))));
 }
 
-TEST_CASE("mata::nft::lazy – self-union and self-intersection of an NFT relation stay correct") {
+TEST_CASE("mata_lazy – self-union and self-intersection of an NFT relation stay correct") {
     SymbolicFormula tree;
     const Term rel = tree.make_term(relation_single_pair('a', 'b'));
     CHECK_FALSE(tree.is_empty(tree.intersect(rel, rel)));
     CHECK_FALSE(tree.is_empty(tree.unite(rel, rel)));
 }
 
-TEST_CASE("mata::nft::lazy – identity projection on arity-1 language is unchanged") {
+TEST_CASE("mata_lazy – identity projection on arity-1 language is unchanged") {
     SymbolicFormula tree;
     const Term a = tree.make_term(single_symbol_nfa('a'));
     const Term empty = tree.make_term(empty_nfa());
@@ -905,7 +905,7 @@ TEST_CASE("mata::nft::lazy – identity projection on arity-1 language is unchan
     CHECK(tree.is_empty(tree.project(empty, {0})));
 }
 
-TEST_CASE("mata::nft::lazy – identity projection on arity-2 relation is unchanged") {
+TEST_CASE("mata_lazy – identity projection on arity-2 relation is unchanged") {
     SymbolicFormula tree;
     const Term rel = tree.make_term(relation_single_pair('a', 'b'));
     const Term empty = tree.make_term(empty_nft('a', 'b'));
@@ -914,7 +914,7 @@ TEST_CASE("mata::nft::lazy – identity projection on arity-2 relation is unchan
     CHECK(tree.is_empty(tree.project(empty, {0, 1})));
 }
 
-TEST_CASE("mata::nft::lazy – identity projection on arity-3 relation is unchanged") {
+TEST_CASE("mata_lazy – identity projection on arity-3 relation is unchanged") {
     SymbolicFormula tree;
     const Term triple = tree.make_term(relation_single_triple('a', 'b', 'c'));
 
@@ -923,7 +923,7 @@ TEST_CASE("mata::nft::lazy – identity projection on arity-3 relation is unchan
     CHECK_FALSE(tree.is_empty(projected));
 }
 
-TEST_CASE("mata::nft::lazy – projecting identity to tape 0 yields the language") {
+TEST_CASE("mata_lazy – projecting identity to tape 0 yields the language") {
     SymbolicFormula tree;
     const Term a = tree.make_term(single_symbol_nfa('a'));
     const Term diag = tree.identity(a);
@@ -937,7 +937,7 @@ TEST_CASE("mata::nft::lazy – projecting identity to tape 0 yields the language
     CHECK(tree.is_empty(tree.intersect(back_to_a, tree.make_term(single_symbol_nfa('b')))));
 }
 
-TEST_CASE("mata::nft::lazy – projecting identity to tape 1 yields the language") {
+TEST_CASE("mata_lazy – projecting identity to tape 1 yields the language") {
     SymbolicFormula tree;
     const Term a = tree.make_term(single_symbol_nfa('a'));
     const Term diag = tree.identity(a);
@@ -949,7 +949,7 @@ TEST_CASE("mata::nft::lazy – projecting identity to tape 1 yields the language
     CHECK(tree.is_empty(tree.intersect(back_to_a, tree.make_term(single_symbol_nfa('b')))));
 }
 
-TEST_CASE("mata::nft::lazy – projecting identity by [0,1] is still identity") {
+TEST_CASE("mata_lazy – projecting identity by [0,1] is still identity") {
     SymbolicFormula tree;
     const Term a = tree.make_term(single_symbol_nfa('a'));
     const Term diag = tree.identity(a);
@@ -965,7 +965,7 @@ TEST_CASE("mata::nft::lazy – projecting identity by [0,1] is still identity") 
     CHECK(tree.is_empty(tree.intersect(reprojected, ab)));
 }
 
-TEST_CASE("mata::nft::lazy – projecting identity by [1,0] is still identity by symmetry") {
+TEST_CASE("mata_lazy – projecting identity by [1,0] is still identity by symmetry") {
     SymbolicFormula tree;
     const Term a = tree.make_term(single_symbol_nfa('a'));
     const Term diag = tree.identity(a);
@@ -979,7 +979,7 @@ TEST_CASE("mata::nft::lazy – projecting identity by [1,0] is still identity by
     CHECK(tree.is_empty(tree.intersect(swapped, ab)));
 }
 
-TEST_CASE("mata::nft::lazy – projecting identity of an empty language is empty") {
+TEST_CASE("mata_lazy – projecting identity of an empty language is empty") {
     SymbolicFormula tree;
     const Term empty = tree.make_term(empty_nfa());
     CHECK(tree.is_empty(tree.project(tree.identity(empty), {0})));
@@ -988,7 +988,7 @@ TEST_CASE("mata::nft::lazy – projecting identity of an empty language is empty
     CHECK(tree.is_empty(tree.project(tree.identity(empty), {1, 0})));
 }
 
-TEST_CASE("mata::nft::lazy – intersect of two identities equals identity of the intersection") {
+TEST_CASE("mata_lazy – intersect of two identities equals identity of the intersection") {
     // L1 = {a}, L2 = {a}, L1 ∩ L2 = {a}, identity should match (a, a).
     SymbolicFormula tree;
     const Term a = tree.make_term(single_symbol_nfa('a'));
@@ -1001,7 +1001,7 @@ TEST_CASE("mata::nft::lazy – intersect of two identities equals identity of th
     CHECK(tree.is_empty(tree.intersect(fused, tree.make_term(relation_single_pair('a', 'b')))));
 }
 
-TEST_CASE("mata::nft::lazy – intersect of identities of disjoint languages is empty") {
+TEST_CASE("mata_lazy – intersect of identities of disjoint languages is empty") {
     // identity({a}) ∩ identity({b}) = identity(∅) = ∅.
     SymbolicFormula tree;
     const Term a = tree.make_term(single_symbol_nfa('a'));
@@ -1009,7 +1009,7 @@ TEST_CASE("mata::nft::lazy – intersect of identities of disjoint languages is 
     CHECK(tree.is_empty(tree.intersect(tree.identity(a), tree.identity(b))));
 }
 
-TEST_CASE("mata::nft::lazy – union of identities preserves diagonal coverage on both sides") {
+TEST_CASE("mata_lazy – union of identities preserves diagonal coverage on both sides") {
     SymbolicFormula tree;
     const Term a = tree.make_term(single_symbol_nfa('a'));
     const Term b = tree.make_term(single_symbol_nfa('b'));
@@ -1023,14 +1023,14 @@ TEST_CASE("mata::nft::lazy – union of identities preserves diagonal coverage o
     CHECK(tree.is_empty(tree.intersect(fused, tree.make_term(relation_single_pair('a', 'b')))));
 }
 
-TEST_CASE("mata::nft::lazy – union of identities of empty languages is empty") {
+TEST_CASE("mata_lazy – union of identities of empty languages is empty") {
     SymbolicFormula tree;
     const Term e1 = tree.make_term(empty_nfa());
     const Term e2 = tree.make_term(empty_nfa());
     CHECK(tree.is_empty(tree.unite(tree.identity(e1), tree.identity(e2))));
 }
 
-TEST_CASE("mata::nft::lazy – self-intersect of identity collapses to a single identity") {
+TEST_CASE("mata_lazy – self-intersect of identity collapses to a single identity") {
     // identity(L) ∩ identity(L), the same exec id on both sides triggers both
     // identity fusion and idempotence in one go.
     SymbolicFormula tree;
@@ -1044,7 +1044,7 @@ TEST_CASE("mata::nft::lazy – self-intersect of identity collapses to a single 
     CHECK(tree.is_empty(tree.intersect(self_fused, tree.make_term(relation_single_pair('a', 'b')))));
 }
 
-TEST_CASE("mata::nft::lazy – complement of a self-union agrees with complement of one operand") {
+TEST_CASE("mata_lazy – complement of a self-union agrees with complement of one operand") {
     SymbolicFormula tree;
     const Term a = tree.make_term(single_symbol_nfa('a'));
     const Term lhs = tree.complement(tree.unite(a, a));
@@ -1053,7 +1053,7 @@ TEST_CASE("mata::nft::lazy – complement of a self-union agrees with complement
     CHECK(tree.is_empty(lhs) == tree.is_empty(rhs));
 }
 
-TEST_CASE("mata::nft::lazy – projecting identity by the full identity permutation stays correct") {
+TEST_CASE("mata_lazy – projecting identity by the full identity permutation stays correct") {
     SymbolicFormula tree;
     const Term a = tree.make_term(single_symbol_nfa('a'));
     const Term diag = tree.identity(a);
@@ -1091,7 +1091,7 @@ namespace {
 
 } // namespace
 
-TEST_CASE("mata::nft::lazy – diagonal slice via project of intersect of identity yields the diagonal language") {
+TEST_CASE("mata_lazy – diagonal slice via project of intersect of identity yields the diagonal language") {
     SymbolicFormula tree;
     const Term universe = tree.make_term(universal_nfa('a'));
     const Term diag_rel = tree.make_term(pair_a_a_and_b_b());
@@ -1104,7 +1104,7 @@ TEST_CASE("mata::nft::lazy – diagonal slice via project of intersect of identi
     CHECK_FALSE(tree.is_empty(tree.intersect(slice, tree.make_term(single_symbol_nfa('a')))));
 }
 
-TEST_CASE("mata::nft::lazy – diagonal slice with relation operand on the left of intersect") {
+TEST_CASE("mata_lazy – diagonal slice with relation operand on the left of intersect") {
     SymbolicFormula tree;
     const Term universe = tree.make_term(universal_nfa('a'));
     const Term diag_rel = tree.make_term(pair_a_a_and_b_b());
@@ -1114,7 +1114,7 @@ TEST_CASE("mata::nft::lazy – diagonal slice with relation operand on the left 
     CHECK_FALSE(tree.is_empty(slice));
 }
 
-TEST_CASE("mata::nft::lazy – diagonal slice projecting tape 1 gives the same language") {
+TEST_CASE("mata_lazy – diagonal slice projecting tape 1 gives the same language") {
     SymbolicFormula tree;
     const Term universe = tree.make_term(universal_nfa('a'));
     const Term diag_rel = tree.make_term(pair_a_a_and_b_b());
@@ -1125,7 +1125,7 @@ TEST_CASE("mata::nft::lazy – diagonal slice projecting tape 1 gives the same l
     CHECK_FALSE(tree.is_empty(slice_1));
 }
 
-TEST_CASE("mata::nft::lazy – diagonal slice with empty language is empty") {
+TEST_CASE("mata_lazy – diagonal slice with empty language is empty") {
     SymbolicFormula tree;
     const Term empty = tree.make_term(empty_nfa());
     const Term diag_rel = tree.make_term(pair_a_a_and_b_b());
@@ -1133,7 +1133,7 @@ TEST_CASE("mata::nft::lazy – diagonal slice with empty language is empty") {
     CHECK(tree.is_empty(slice));
 }
 
-TEST_CASE("mata::nft::lazy – diagonal slice with off-diagonal-only relation is empty") {
+TEST_CASE("mata_lazy – diagonal slice with off-diagonal-only relation is empty") {
     // relation_single_pair('a', 'b') has no diagonal entry.
     SymbolicFormula tree;
     const Term universe = tree.make_term(universal_nfa('a'));
@@ -1142,7 +1142,7 @@ TEST_CASE("mata::nft::lazy – diagonal slice with off-diagonal-only relation is
     CHECK(tree.is_empty(slice));
 }
 
-TEST_CASE("mata::nft::lazy – diagonal slice with disjoint language and diagonal is empty") {
+TEST_CASE("mata_lazy – diagonal slice with disjoint language and diagonal is empty") {
     // Universe = {c}*, diagonal relation only contains (a, a) and (b, b), no overlap.
     SymbolicFormula tree;
     const Term universe = tree.make_term(universal_nfa('c'));
@@ -1151,7 +1151,7 @@ TEST_CASE("mata::nft::lazy – diagonal slice with disjoint language and diagona
     CHECK(tree.is_empty(slice));
 }
 
-TEST_CASE("mata::nft::lazy – diagonal pattern with DONT_CARE relation falls back and stays correct") {
+TEST_CASE("mata_lazy – diagonal pattern with DONT_CARE relation falls back and stays correct") {
     // The relation has DONT_CARE on tape 0 so the recognizer must not fire,
     // the engine then evaluates via the generic intersect/project path.
     SymbolicFormula tree;
@@ -1164,7 +1164,7 @@ TEST_CASE("mata::nft::lazy – diagonal pattern with DONT_CARE relation falls ba
     CHECK_FALSE(tree.is_empty(slice));
 }
 
-TEST_CASE("mata::nft::lazy – diagonal pattern under complement still respects subsumption") {
+TEST_CASE("mata_lazy – diagonal pattern under complement still respects subsumption") {
     SymbolicFormula tree;
     const Term universe = tree.make_term(universal_nfa('a'));
     const Term diag_rel = tree.make_term(pair_a_a_and_b_b());

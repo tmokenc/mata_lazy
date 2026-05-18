@@ -1,6 +1,6 @@
 /**
  * @file subsumption.cc
- * @brief Private subsumption and antichain-pruning implementation for mata::nft::lazy::detail.
+ * @brief Private subsumption and antichain-pruning implementation for mata_lazy::detail.
  */
 
 #include "subsumption.hh"
@@ -11,7 +11,7 @@
 #include <algorithm>
 #include <iostream>
 
-namespace mata::nft::lazy::detail {
+namespace mata_lazy::detail {
 
 SubsumptionEngine::SubsumptionEngine(const SubsumptionContext& context)
     : context(context), precomputed_simulation_nfas(context.nfas.size()),
@@ -501,4 +501,4 @@ void SubsumptionEngine::print_statistics() const {
     std::cout << "Current antichain size: " << antichain.size() << std::endl;
 }
 
-} // namespace mata::nft::lazy::detail
+} // namespace mata_lazy::detail

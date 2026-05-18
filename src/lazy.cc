@@ -11,7 +11,7 @@
 #include "lazy/emptiness.hh"
 #include "lazy/validation.hh"
 
-namespace mata::nft::lazy {
+namespace mata_lazy {
 
 namespace {
     uint8_t require_same_arity(const SymbolicFormula& tree, const char* operation, const Term& lhs, const Term& rhs) {
@@ -227,4 +227,4 @@ bool SymbolicFormula::is_empty(const Term& root_node, const std::vector<mata::On
     return detail::is_empty(*this, root_node, &level_alphabets);
 }
 
-} // namespace mata::nft::lazy
+} // namespace mata_lazy

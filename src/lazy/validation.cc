@@ -1,6 +1,6 @@
 /**
  * @file validation.cc
- * @brief Private structural validation helpers for mata::nft::lazy::detail.
+ * @brief Private structural validation helpers for mata_lazy::detail.
  */
 
 #include "validation.hh"
@@ -10,7 +10,7 @@
 #include <type_traits>
 #include <unordered_set>
 
-namespace mata::nft::lazy::detail {
+namespace mata_lazy::detail {
 
 namespace {
     template<typename T, typename KeyFn>
@@ -165,4 +165,4 @@ bool is_valid(const SymbolicFormula& tree, const Term& root_node) {
     return validate_node(tree, root_node.get_id(), plan_indices, marks);
 }
 
-} // namespace mata::nft::lazy::detail
+} // namespace mata_lazy::detail

@@ -1,6 +1,6 @@
 /**
  * @file reconstruction.cc
- * @brief Private symbolic-formula DAG reconstruction for mata::nft::lazy::detail.
+ * @brief Private symbolic-formula DAG reconstruction for mata_lazy::detail.
  */
 
 #include "reconstruction.hh"
@@ -13,7 +13,7 @@
 #include <utility>
 #include <vector>
 
-namespace mata::nft::lazy::detail {
+namespace mata_lazy::detail {
 
 namespace {
 
@@ -439,4 +439,4 @@ NodeId reconstruct_nodes(
     return root_id;
 }
 
-} // namespace mata::nft::lazy::detail
+} // namespace mata_lazy::detail

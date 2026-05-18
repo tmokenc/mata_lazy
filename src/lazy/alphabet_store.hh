@@ -1,6 +1,6 @@
 /**
  * @file alphabet_store.hh
- * @brief Private alphabet storage and resolution helpers for mata::nft::lazy::detail.
+ * @brief Private alphabet storage and resolution helpers for mata_lazy::detail.
  */
 
 #pragma once
@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-namespace mata::nft::lazy::detail {
+namespace mata_lazy::detail {
 
 /**
  * @brief Owns resolved visible alphabets for reconstructed lazy exec nodes.
@@ -109,4 +109,4 @@ public:
     static std::string symbol_name_for(const mata::Alphabet* alphabet, mata::Symbol symbol);
 };
 
-} // namespace mata::nft::lazy::detail
+} // namespace mata_lazy::detail

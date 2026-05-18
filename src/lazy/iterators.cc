@@ -1,6 +1,6 @@
 /**
  * @file iterators.cc
- * @brief Private iterator helpers for mata::nft::lazy::detail.
+ * @brief Private iterator helpers for mata_lazy::detail.
  */
 
 #include "iterators.hh"
@@ -9,7 +9,7 @@
 #include <limits>
 #include <stdexcept>
 
-namespace mata::nft::lazy::detail {
+namespace mata_lazy::detail {
 
 TransitionTupleHelper::TransitionTupleHelper(
         const std::vector<ExecNode>& exec_nodes, const AlphabetStore& alphabet_store)
@@ -649,4 +649,4 @@ void ComplementTransitionIterator::advance_tuple() {
     finished = true;
 }
 
-} // namespace mata::nft::lazy::detail
+} // namespace mata_lazy::detail

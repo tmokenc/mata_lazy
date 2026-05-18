@@ -9,7 +9,7 @@
 using namespace mata;
 
 namespace nfa_ops = mata::nfa;
-namespace nfa_lazy = mata::nfa::lazy;
+namespace nfa_lazy = mata_lazy;
 
 namespace {
 

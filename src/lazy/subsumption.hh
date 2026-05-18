@@ -1,6 +1,6 @@
 /**
  * @file subsumption.hh
- * @brief Private subsumption and antichain-pruning declarations for mata::nft::lazy::detail.
+ * @brief Private subsumption and antichain-pruning declarations for mata_lazy::detail.
  */
 
 #pragma once
@@ -17,7 +17,7 @@
 #include <utility>
 #include <vector>
 
-namespace mata::nft::lazy::detail {
+namespace mata_lazy::detail {
 
 /**
  * @brief External references needed by the lazy subsumption engine.
@@ -335,4 +335,4 @@ private:
     bool is_subsumed_with_lhs_sim(NodeId root_id, MacroStateId state, uint32_t fp);
 };
 
-} // namespace mata::nft::lazy::detail
+} // namespace mata_lazy::detail

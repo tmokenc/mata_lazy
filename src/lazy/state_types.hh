@@ -1,6 +1,6 @@
 /**
  * @file state_types.hh
- * @brief Shared private state and hashing helpers for mata::nft::lazy::detail.
+ * @brief Shared private state and hashing helpers for mata_lazy::detail.
  */
 
 #pragma once
@@ -14,7 +14,7 @@
 #include <stdexcept>
 #include <string>
 
-namespace mata::nft::lazy::detail {
+namespace mata_lazy::detail {
 
 
 /**
@@ -486,4 +486,4 @@ constexpr uint32_t hash_tagged(const TaggedState& tagged) noexcept {
     return fold_hash64(mix_hash64(packed));
 }
 
-} // namespace mata::nft::lazy::detail
+} // namespace mata_lazy::detail

@@ -1,6 +1,6 @@
 /**
  * @file alphabet_store.cc
- * @brief Private alphabet storage and resolution helpers for mata::nft::lazy::detail.
+ * @brief Private alphabet storage and resolution helpers for mata_lazy::detail.
  */
 
 #include "alphabet_store.hh"
@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-namespace mata::nft::lazy::detail {
+namespace mata_lazy::detail {
 
 namespace {
 
@@ -376,4 +376,4 @@ bool AlphabetStore::try_translate_symbol_name_to_resolved(
     return true;
 }
 
-} // namespace mata::nft::lazy::detail
+} // namespace mata_lazy::detail

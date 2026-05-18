@@ -1,6 +1,6 @@
 /**
  * @file iterators.hh
- * @brief Private iterator helpers for mata::nft::lazy::detail.
+ * @brief Private iterator helpers for mata_lazy::detail.
  */
 
 #pragma once
@@ -15,7 +15,7 @@
 #include <utility>
 #include <vector>
 
-namespace mata::nft::lazy::detail {
+namespace mata_lazy::detail {
 
 /// Visible label tuple used by the lazy transition iterators.
 using SymbolTuple = SmallVec2<mata::Symbol>;
@@ -531,4 +531,4 @@ private:
     void advance_tuple();
 };
 
-} // namespace mata::nft::lazy::detail
+} // namespace mata_lazy::detail

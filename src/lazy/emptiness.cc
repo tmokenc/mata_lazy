@@ -1,6 +1,6 @@
 /**
  * @file emptiness.cc
- * @brief Private execution engine for mata::nft::lazy::detail.
+ * @brief Private execution engine for mata_lazy::detail.
  */
 
 #include "emptiness.hh"
@@ -19,7 +19,7 @@
 #include <utility>
 #include <vector>
 
-namespace mata::nft::lazy::detail {
+namespace mata_lazy::detail {
 
 namespace {
     // Only product-like nodes do non-trivial work that can be repeated: their iterators get
@@ -364,4 +364,4 @@ bool is_empty(
     return true;
 }
 
-} // namespace mata::nft::lazy::detail
+} // namespace mata_lazy::detail

@@ -1,6 +1,6 @@
 /**
  * @file macrostate_store.cc
- * @brief Private macrostate storage for mata::nft::lazy::detail.
+ * @brief Private macrostate storage for mata_lazy::detail.
  */
 
 #include "macrostate_store.hh"
@@ -10,7 +10,7 @@
 #include <limits>
 #include <utility>
 
-namespace mata::nft::lazy::detail {
+namespace mata_lazy::detail {
 
 bool MacroStateStore::can_use_dense_pair_store(
         const std::optional<size_t> lhs_bound, const std::optional<size_t> rhs_bound) {
@@ -199,4 +199,4 @@ MacroStateId MacroStateStore::intern(const NodeId idx, const TaggedState& tagged
     return id;
 }
 
-} // namespace mata::nft::lazy::detail
+} // namespace mata_lazy::detail

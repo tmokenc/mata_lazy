@@ -32,7 +32,7 @@
 using namespace mata;
 using namespace mata::nfa;
 using namespace mata::nft;
-using namespace mata::nft::lazy;
+using namespace mata_lazy;
 
 namespace {
 

@@ -1,6 +1,6 @@
 # mata_lazy
 
-Standalone version of the lazy module (namespace `mata::nft::lazy`) implemented in [this fork of MATA](https://github.com/tmokenc/mata/tree/lazy-nft-generic-arity). Provides lazy on-the-fly emptiness checking for symbolic combinations of NFA and arbitrary-arity NFT relations.
+Standalone version of the lazy module originally written under `mata::nft::lazy` in [this fork of MATA](https://github.com/tmokenc/mata/tree/lazy-nft-generic-arity), now repackaged under the flat namespace `mata_lazy`. Provides lazy on-the-fly emptiness checking for symbolic combinations of NFA and arbitrary-arity NFT relations.
 
 ## libmata requirement
 
@@ -18,10 +18,9 @@ One header:
 #include "mata_lazy.hh"
 ```
 
-Two namespaces:
-
-- `mata::nft::lazy::SymbolicFormula` — arbitrary-arity NFT + NFA leaves
-- `mata::nfa::lazy::SymbolicFormula` — arity-1 facade if you only need NFAs
+One class — `mata_lazy::SymbolicFormula` — with overloaded `make_term` accepting
+either `mata::nfa::Nfa` or `mata::nft::Nft` leaves, plus operators (`unite`,
+`intersect`, `complement`, `compose`, `post_image`, …) and `is_empty`.
 
 ## Build
 

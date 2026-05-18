@@ -1,6 +1,6 @@
 /**
  * @file reconstruction.hh
- * @brief Private symbolic-formula DAG reconstruction declarations for mata::nft::lazy::detail.
+ * @brief Private symbolic-formula DAG reconstruction declarations for mata_lazy::detail.
  */
 
 #pragma once
@@ -9,7 +9,7 @@
 
 #include <vector>
 
-namespace mata::nft::lazy::detail {
+namespace mata_lazy::detail {
 
 /**
  * @brief Reconstruct and normalize the reachable exec DAG below one symbolic term.
@@ -32,4 +32,4 @@ NodeId reconstruct_nodes(
         const SymbolicFormula& formula, NodeId id, const std::vector<CompiledSyncPlan>& compiled_sync_plans,
         std::vector<ExecNode>& output, std::vector<const void*>& plan_at_node);
 
-} // namespace mata::nft::lazy::detail
+} // namespace mata_lazy::detail

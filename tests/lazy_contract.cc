@@ -1,5 +1,5 @@
 /** @file
- * @brief Contract / structural tests for mata::nft::lazy.
+ * @brief Contract / structural tests for mata_lazy.
  *
  * These tests focus on the public API, tree construction, and validation behavior.
  */
@@ -14,7 +14,7 @@
 
 using namespace mata;
 using namespace mata::nft;
-using namespace mata::nft::lazy;
+using namespace mata_lazy;
 
 namespace {
 
@@ -54,7 +54,7 @@ Nft make_three_level_chain(Symbol a = 'a', Symbol b = 'b', Symbol c = 'c') {
 
 } // namespace
 
-TEST_CASE("mata::nft::lazy factory methods build the expected node kinds") {
+TEST_CASE("mata_lazy factory methods build the expected node kinds") {
     SymbolicFormula tree;
 
     const Term nfa_a = tree.make_term(make_trivial_nfa());
@@ -104,7 +104,7 @@ TEST_CASE("mata::nft::lazy factory methods build the expected node kinds") {
     CHECK(tree.nodes[t_compose.get_id()].rhs == t_comp_nft.get_id());
 }
 
-TEST_CASE("mata::nft::lazy post_image and pre_image are fixed to arity-1 over 2-tape transducers") {
+TEST_CASE("mata_lazy post_image and pre_image are fixed to arity-1 over 2-tape transducers") {
     SymbolicFormula tree;
 
     const Term lang = tree.make_term(make_trivial_nfa(true));
@@ -117,7 +117,7 @@ TEST_CASE("mata::nft::lazy post_image and pre_image are fixed to arity-1 over 2-
     CHECK_THROWS_AS(tree.pre_image(lang, three_tape), std::invalid_argument);
 }
 
-TEST_CASE("mata::nft::lazy accepts NFTs with arbitrary arity") {
+TEST_CASE("mata_lazy accepts NFTs with arbitrary arity") {
     SymbolicFormula tree;
 
     const Nft one_level = Nft::with_levels(1, 1, {0}, {0});
@@ -130,7 +130,7 @@ TEST_CASE("mata::nft::lazy accepts NFTs with arbitrary arity") {
     CHECK(tree.arity_of(ternary) == 3);
 }
 
-TEST_CASE("mata::nft::lazy identity turns an arity-1 language into an arity-2 relation") {
+TEST_CASE("mata_lazy identity turns an arity-1 language into an arity-2 relation") {
     SymbolicFormula tree;
     const Term lang = tree.make_term(make_trivial_nfa());
     const Term id = tree.identity(lang);
@@ -139,7 +139,7 @@ TEST_CASE("mata::nft::lazy identity turns an arity-1 language into an arity-2 re
     CHECK(tree.nodes[id.get_id()].kind == NodeKind::Identity);
 }
 
-TEST_CASE("mata::nft::lazy generic compose keeps all non-synchronized levels") {
+TEST_CASE("mata_lazy generic compose keeps all non-synchronized levels") {
     SymbolicFormula tree;
     const Term lhs = tree.make_term(make_three_level_chain('a', 'b', 'c'));
     const Term rhs = tree.make_term(make_three_level_chain('c', 'd', 'e'));
@@ -149,7 +149,7 @@ TEST_CASE("mata::nft::lazy generic compose keeps all non-synchronized levels") {
     CHECK(tree.arity_of(composed) == 4);
 }
 
-TEST_CASE("mata::nft::lazy is_valid should reject cycles") {
+TEST_CASE("mata_lazy is_valid should reject cycles") {
     // Each section uses a fresh tree with only a leaf NFA so the
     // nfas vector has exactly one entry (index 0). The raw node
     // manipulation is therefore consistent with the stored automata.
@@ -210,7 +210,7 @@ TEST_CASE("mata::nft::lazy is_valid should reject cycles") {
 }
 
 
-TEST_CASE("mata::nft::lazy is_valid should accept DAG sharing") {
+TEST_CASE("mata_lazy is_valid should accept DAG sharing") {
     SymbolicFormula tree;
 
     const Term lhs = tree.make_term(make_trivial_nfa());
@@ -221,7 +221,7 @@ TEST_CASE("mata::nft::lazy is_valid should accept DAG sharing") {
     CHECK(tree.is_valid(root));
 }
 
-TEST_CASE("mata::nft::lazy public API preserves semantics for asymmetric union and intersect trees") {
+TEST_CASE("mata_lazy public API preserves semantics for asymmetric union and intersect trees") {
     SECTION("union remains non-empty regardless of subtree depth ordering") {
         SymbolicFormula tree;
 
