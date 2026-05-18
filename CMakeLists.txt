@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.24)  # $<LINK_LIBRARY:WHOLE_ARCHIVE,...> for the bundled .so
 project(
     mata_lazy
     DESCRIPTION "Lazy on-the-fly emptiness checking for NFA / NFT relations — extension of libmata"
@@ -192,13 +192,13 @@ end
         POSITION_INDEPENDENT_CODE ON
     )
 
-    # Force the entire libmata.a into the .so. Order matters: --whole-archive,
-    # then the archive path, then --no-whole-archive (so any system libs that
-    # follow are not whole-archived).
-    target_link_options(mata_lazy_shared PRIVATE
-        "LINKER:--whole-archive,$<TARGET_FILE:${MATA_LAZY_MATA_TARGET}>,--no-whole-archive"
+    # Link libmata in whole-archive mode so every object is baked into the .so,
+    # while still inheriting libmata's INTERFACE_INCLUDE_DIRECTORIES (so we can
+    # compile against `mata/nfa/nfa.hh`) and any transitive deps it propagates.
+    # $<LINK_LIBRARY:WHOLE_ARCHIVE,...> requires CMake ≥ 3.24.
+    target_link_libraries(mata_lazy_shared PRIVATE
+        "$<LINK_LIBRARY:WHOLE_ARCHIVE,${MATA_LAZY_MATA_TARGET}>"
     )
-    add_dependencies(mata_lazy_shared ${MATA_LAZY_MATA_TARGET})
 
     # Threads is libmata's transitive system dep.
     find_package(Threads REQUIRED)
